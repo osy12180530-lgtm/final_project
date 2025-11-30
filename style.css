@@ -1,0 +1,154 @@
+/* --- 기본 설정 --- */
+* { box-sizing: border-box; margin: 0; padding: 0; }
+body { 
+    /* 고급스러운 밤하늘 그라데이션 (딥네이비 -> 차콜) */
+    background: linear-gradient(135deg, #0f2027, #203a43, #2c5364);
+    color: #fff; 
+    font-family: 'Noto Sans KR', sans-serif; 
+    overflow-x: hidden; 
+    min-height: 100vh; /* 화면 꽉 채우기 */
+}
+
+/* --- [INTRO] 초대장 --- */
+#intro-overlay {
+    position: fixed; top: 0; left: 0; width: 100%; height: 100%;
+    z-index: 9999;
+    display: flex; justify-content: center; align-items: center;
+    /* 배경과 자연스럽게 이어지는 오버레이 */
+    background: radial-gradient(circle at center, #203a43 0%, #0f2027 90%);
+    transition: all 1s ease;
+}
+.star-bg {
+    position: absolute; width: 100%; height: 100%;
+    background-image: radial-gradient(white 1px, transparent 1px);
+    background-size: 50px 50px;
+    opacity: 0.3; animation: twinkle 3s infinite;
+}
+.invitation-card {
+    width: 300px; padding: 40px 20px;
+    background: rgba(0, 0, 0, 0.6); /* 반투명 블랙 */
+    backdrop-filter: blur(5px);
+    border: 1px solid #d4af37; /* 고급진 골드 테두리 */
+    box-shadow: 0 0 40px rgba(212, 175, 55, 0.3);
+    text-align: center;
+    transform: perspective(1000px) rotateX(5deg);
+    position: relative; overflow: hidden;
+}
+.invitation-card::after {
+    content: ""; position: absolute; top: -50%; left: -50%; width: 200%; height: 200%;
+    background: linear-gradient(to right, transparent, rgba(212,175,55,0.2), transparent);
+    transform: rotate(45deg); animation: shimmer 3s infinite linear; pointer-events: none;
+}
+.invitation-text { font-family: 'Cinzel', serif; color: #d4af37; margin-bottom: 20px; text-shadow: 0 2px 4px rgba(0,0,0,0.5); }
+.invite-msg { color: #ccc; margin-bottom: 30px; font-size: 0.9rem; }
+.enter-btn {
+    background: transparent; border: 1px solid #d4af37; color: #d4af37;
+    padding: 10px 20px; cursor: pointer; font-family: 'Cinzel', serif;
+    transition: 0.3s; z-index: 10; position: relative;
+}
+.enter-btn:hover { background: #d4af37; color: #000; box-shadow: 0 0 15px #d4af37; }
+#intro-overlay.open-door { opacity: 0; transform: scale(1.1); pointer-events: none; }
+
+/* --- [MAIN] 메인 화면 레이아웃 --- */
+#main-content {
+    max-width: 600px; margin: 0 auto; padding: 40px 20px;
+    opacity: 0; transform: translateY(20px);
+    transition: opacity 1.5s ease, transform 1.5s ease;
+}
+#main-content.active { opacity: 1; transform: translateY(0); }
+
+.page-title {
+    text-align: center; font-family: 'Cinzel', serif; font-size: 2rem;
+    margin-bottom: 40px; letter-spacing: 5px; color: #f0f0f0;
+    text-shadow: 0 2px 10px rgba(0,0,0,0.3);
+}
+.playlist-wrapper { display: flex; flex-direction: column; gap: 25px; }
+
+/* --- 공통 카드 스타일 --- */
+.track-card {
+    display: flex; align-items: center; padding: 25px;
+    border-radius: 15px; position: relative; overflow: hidden;
+    transition: transform 0.3s ease, box-shadow 0.3s ease;
+    box-shadow: 0 5px 15px rgba(0,0,0,0.2); /* 기본 그림자 */
+}
+.track-card:hover { transform: translateY(-5px); box-shadow: 0 10px 25px rgba(0,0,0,0.4); }
+
+.card-thumb { width: 90px; height: 90px; border-radius: 12px; object-fit: cover; margin-right: 25px; z-index: 2; }
+.card-info { flex: 1; z-index: 2; display: flex; flex-direction: column; justify-content: center; }
+.card-info h3 { font-size: 1.3rem; margin-bottom: 4px; }
+.artist-name { font-size: 0.9rem; opacity: 0.8; margin-bottom: 8px; }
+
+/* 새로 추가된 한 줄 각주 스타일 */
+.song-comment {
+    font-size: 0.85rem;
+    color: #e0d4a8; /* 은은한 골드 베이지 */
+    font-style: italic;
+    border-left: 2px solid #d4af37;
+    padding-left: 10px;
+    margin-top: 5px;
+}
+
+.play-btn {
+    padding: 8px 20px; border-radius: 20px; font-size: 0.85rem;
+    text-decoration: none; font-weight: bold; z-index: 2; transition: 0.2s; white-space: nowrap;
+}
+
+/* --- 1. Sole 스타일 (수정됨: 폰트 부드럽게) --- */
+.sole-style {
+    /* 유리 느낌 강화 */
+    background: rgba(255, 255, 255, 0.08); 
+    backdrop-filter: blur(12px);
+    border: 1px solid rgba(255, 255, 255, 0.15);
+}
+/* 여기! 고운 돋움 폰트 적용 */
+.sole-style .card-info h3 { font-family: 'Gowun Dodum', sans-serif; font-weight: 400; }
+.sole-style .artist-name { font-family: 'Gowun Dodum', sans-serif; }
+.sole-style .song-comment { color: #fdfcf0; border-left-color: #fff; opacity: 0.9; }
+
+.sole-style .play-btn { background: rgba(255,255,255,0.2); color: #fff; border: 1px solid rgba(255,255,255,0.4); }
+.sole-style .play-btn:hover { background: #fff; color: #333; }
+
+/* --- 2. APT 스타일 --- */
+.apt-style {
+    background: linear-gradient(90deg, #1a1a1a, #2a2a2a);
+    border: 2px solid #ff007f;
+}
+.apt-bg-text {
+    position: absolute; top: 50%; left: 50%; transform: translate(-50%, -50%);
+    font-family: 'Permanent Marker', cursive; font-size: 3rem; 
+    color: rgba(255, 0, 127, 0.07); white-space: nowrap; pointer-events: none;
+}
+.apt-style .card-info h3 { font-family: 'Permanent Marker'; color: #ff007f; letter-spacing: 1px; }
+.apt-style .play-btn { background: #ff007f; color: #fff; border: 2px solid #fff; }
+.apt-style .play-btn:hover { background: #fff; color: #ff007f; }
+
+/* --- 3. GD 스타일 --- */
+.gd-style {
+    background: #000; border: 1px solid #333; 
+    box-shadow: 0 0 10px rgba(57, 255, 20, 0.1);
+}
+.gd-style .card-info h3 { color: #fff; text-shadow: 0 0 5px #39ff14; }
+.gd-style .song-comment { color: #39ff14; border-left-color: #39ff14; opacity: 0.8; }
+
+.gd-style .play-btn { background: transparent; border: 1px solid #39ff14; color: #39ff14; }
+.gd-style .play-btn:hover { background: #39ff14; color: #000; box-shadow: 0 0 10px #39ff14; }
+
+/* 애니메이션 */
+.glitch { position: relative; }
+.glitch::before {
+    content: attr(data-text); position: absolute; left: 2px; text-shadow: -1px 0 red;
+    top:0; width: 100%; height: 100%; background: #000; clip-path: polygon(0 0, 100% 0, 100% 45%, 0 45%);
+    animation: glitch-anim 2s infinite linear alternate-reverse;
+}
+@keyframes glitch-anim { 0% { transform: translate(0); } 20% { transform: translate(-2px, 2px); } 40% { transform: translate(-2px, -2px); } 100% { transform: translate(0); } }
+@keyframes twinkle { 0%, 100% { opacity: 0.3; } 50% { opacity: 0.8; } }
+@keyframes shimmer { 0% { transform: translateX(-150%) rotate(45deg); } 100% { transform: translateX(150%) rotate(45deg); } }
+
+/* --- [OUTRO] 하단 푸터 --- */
+.outro-footer { margin-top: 60px; text-align: center; padding-bottom: 40px; }
+.outro-footer p {
+    font-family: 'Cinzel', serif; font-weight: 400; font-size: 1.1rem;
+    letter-spacing: 2px; color: #d4af37; margin-bottom: 20px;
+}
+.replay-link { font-size: 0.8rem; color: #888; cursor: pointer; text-decoration: underline; transition: 0.3s; }
+.replay-link:hover { color: #fff; }
